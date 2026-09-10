@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="PokeOps.Parser/PokeOps.Parser.csproj" />
+  <Project Path="PokeParser.Api/PokeParser.Api.csproj" />
+  <Project Path="PokeParser.csproj" />
+</Solution>

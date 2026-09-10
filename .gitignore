@@ -1,0 +1,18 @@
+.claude/
+.DS_Store
+**/.DS_Store
+
+# Python
+**/__pycache__/
+*.py[oc]
+*.egg-info
+build/
+dist/
+wheels/
+PokeAPI/.venv/
+PokeAPI/.env
+*.db
+
+# .NET
+**/bin/
+**/obj/
