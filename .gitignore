@@ -12,6 +12,7 @@ wheels/
 PokeAPI/.venv/
 PokeAPI/.env
 *.db
+**/.ruff_cache
 
 # .NET
 **/bin/
