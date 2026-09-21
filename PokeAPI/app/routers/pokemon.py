@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlmodel import Session, select
 
 from app.dependencies import get_session
-from app.models.pokemon import Pokemon, PokemonList, Species
+from app.models.pokemon import Pokemon, PokemonResponse, Species
 
 router = APIRouter(
     prefix='/pokemon',
@@ -15,7 +15,7 @@ router = APIRouter(
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-@router.get('/{save_id}', response_model=list[PokemonList])
+@router.get('/{save_id}', response_model=list[PokemonResponse])
 def read_pokemon(
     save_id: int,
     session: SessionDep,

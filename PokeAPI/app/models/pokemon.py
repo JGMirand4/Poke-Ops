@@ -45,9 +45,8 @@ class Pokemon(PokemonJson, table=True):
     location: 'Location' = Relationship()
 
 
-class PokemonList(SQLModel):
+class PokemonResponse(SQLModel):
     id: int
-    species_id: int
     species_name: str | None = None
     nickname: str | None = None
     location: Location | None = None
