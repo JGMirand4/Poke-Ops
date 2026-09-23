@@ -5,9 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "alembic>=1.20.0",
     "fastapi[standard]>=0.141.1",
     "pydantic-settings>=2.15.0",
     "python-dotenv>=1.2.3",
+    "sqlalchemy>=2.0.52",
     "sqlmodel>=0.0.42",
 ]
 
@@ -37,7 +39,7 @@ addopts = '-p no:warnings'
 
 [tool.taskipy.tasks]
 lint = 'ruff check'
-pre_format = 'ruff check --fix'
+pre_format = 'ruff check --fix --unsafe-fixes'
 format = 'ruff format'
 run = 'fastapi dev app/main.py'
 pre_test = 'task lint'
