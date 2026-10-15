@@ -1,52 +1,52 @@
-from pydantic import ConfigDict
-from pydantic.alias_generators import to_camel
-from sqlmodel import Field, Relationship, SQLModel
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from .base import table_registry
 
 
-class Location(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    party: bool
-    nr_box: int
-    slot_number: int
+@table_registry.mapped_as_dataclass
+class Location:
+    __tablename__ = 'locations'
+
+    id: Mapped[int] = mapped_column(init=False, primary_key=True)
+    party: Mapped[bool]
+    slot_number: Mapped[int | None] = mapped_column(default=None)
+    nr_box: Mapped[int | None] = mapped_column(default=None)
 
 
-class Species(SQLModel, table=True):
-    species_id: int | None = Field(default=None, primary_key=True)
-    name: str | None = None
+@table_registry.mapped_as_dataclass
+class Species:
+    __tablename__ = 'species'
+
+    species_id: Mapped[int] = mapped_column(
+        primary_key=True, autoincrement=False
+    )
+    name: Mapped[str | None] = mapped_column(default=None)
 
 
-class PokemonJson(SQLModel):
-    # Essa linha faz a mágica: traduz tudo de/para camelCase automaticamente
-    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+@table_registry.mapped_as_dataclass
+class Pokemon:
+    __tablename__ = 'pokemons'
 
-    species_id: int | None = Field(index=True)
-    nickname: str | None = None
-    level: int | None = None
-    is_shiny: bool | None = None
-    nature: str | None = None
-    ability: str | None = None
-    iv_hp: int | None = None
-    iv_atk: int | None = None
-    iv_def: int | None = None
-    iv_spa: int | None = None
-    iv_spd: int | None = None
-    iv_spe: int | None = None
-    held_item_id: int | None = None
-    slot_number: int | None = None
+    id: Mapped[int] = mapped_column(init=False, primary_key=True)
+    save_id: Mapped[int] = mapped_column(ForeignKey('saves.id'))
+    location_id: Mapped[int | None] = mapped_column(
+        ForeignKey('locations.id'), default=None
+    )
+    species_id: Mapped[int | None] = mapped_column(index=True, default=None)
+    species_name: Mapped[str | None] = mapped_column(index=True, default=None)
+    nickname: Mapped[str | None] = mapped_column(default=None)
+    level: Mapped[int | None] = mapped_column(default=None)
+    is_shiny: Mapped[bool | None] = mapped_column(default=None)
+    nature: Mapped[str | None] = mapped_column(default=None)
+    ability: Mapped[str | None] = mapped_column(default=None)
+    iv_hp: Mapped[int | None] = mapped_column(default=None)
+    iv_atk: Mapped[int | None] = mapped_column(default=None)
+    iv_def: Mapped[int | None] = mapped_column(default=None)
+    iv_spa: Mapped[int | None] = mapped_column(default=None)
+    iv_spd: Mapped[int | None] = mapped_column(default=None)
+    iv_spe: Mapped[int | None] = mapped_column(default=None)
+    held_item_id: Mapped[int | None] = mapped_column(default=None)
+    slot_number: Mapped[int | None] = mapped_column(default=None)
 
-
-class Pokemon(PokemonJson, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    species_name: str | None = Field(index=True)
-
-    save_id: int = Field(default=None, foreign_key='save.id')
-    location_id: int | None = Field(default=None, foreign_key='location.id')
-
-    location: 'Location' = Relationship()
-
-
-class PokemonResponse(SQLModel):
-    id: int
-    species_name: str | None = None
-    nickname: str | None = None
-    location: Location | None = None
+    location: Mapped[Location | None] = relationship(init=False)

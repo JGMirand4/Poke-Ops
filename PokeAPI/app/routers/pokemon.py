@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, Query
 from sqlmodel import Session, select
 
 from app.dependencies import get_session
-from app.models.pokemon import Pokemon, PokemonResponse, Species
+from app.models import Pokemon, Species
+from app.schemas.pokemon import PokemonResponse, SpeciesPublic
 
 router = APIRouter(
     prefix='/pokemon',
@@ -13,6 +14,17 @@ router = APIRouter(
 )
 
 SessionDep = Annotated[Session, Depends(get_session)]
+
+
+@router.get('/species', response_model=list[SpeciesPublic])
+def list_species(
+    session: SessionDep,
+    offset: int = 0,
+    limit: Annotated[int, Query(le=100)] = 100,
+):
+    species = session.exec(select(Species).offset(offset).limit(limit)).all()
+    print(species)
+    return species
 
 
 @router.get('/{save_id}', response_model=list[PokemonResponse])
@@ -30,14 +42,3 @@ def read_pokemon(
         .limit(limit)
     ).all()
     return pokemons
-
-
-@router.get('/species', response_model=list[Species])
-def list_species(
-    session: SessionDep,
-    offset: int = 0,
-    limit: Annotated[int, Query(le=100)] = 100,
-):
-    species = session.exec(select(Species).offset(offset).limit(limit)).all()
-    print(species)
-    return species

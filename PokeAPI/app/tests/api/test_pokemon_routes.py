@@ -31,6 +31,7 @@ def test_create_save(session, mock_db_time):
         'save_name': 'test',
         'trainer_name': 'test trainer',
         'game_name': 'X',
+        'file_name': None,
         'nr_pokemons': 10,
         'created_at': time,
         'updated_at': time,
